@@ -4,6 +4,7 @@ import PlayerRow from './PlayerRow';
 
 const Container = styled.div`
     padding: 0 50px;
+    padding-bottom: 50px;
 `;
 
 const PlayerList = ({ players }) => (

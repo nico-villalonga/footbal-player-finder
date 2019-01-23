@@ -31,7 +31,7 @@ const StyledInput = styled.input`
 `;
 
 const Bar = styled.span.attrs(props => ({
-    color: props.color || '#6dafd9',
+    color: props.color,
 }))`
     position: relative;
     display: block;
@@ -68,23 +68,23 @@ const StyledLabel = styled.label.attrs(props => ({
     transition: 0.2s ease all;
 `;
 
-const InputField = props =>  {
+export const patterns = {
+    alphanumeric: /[a-zA-Z0-9]+/,
+    numeric: /^\d+$/,
+    text: /^[a-z A-Z]+$/,
+};
+
+export const isValidInput = (pattern, value) => patterns[pattern].test(value);
+
+const Input = props =>  {
     const {
         id,
         name,
         placeHolder,
-        color,
+        color = '#6dafd9',
         onChange,
-        pattern,
+        pattern = 'alphanumeric',
     } = props;
-
-    const patterns = {
-        alphanumeric: /[a-zA-Z0-9]+/,
-        numeric: /[0-9]+/,
-        text: /[a-zA-Z]+/,
-    };
-
-    const isValidInput = (pattern, value) => patterns[pattern].test(value);
 
     const handleOnChange = event => {
         const value = event.target.value;
@@ -103,19 +103,19 @@ const InputField = props =>  {
 
     return (
         <GroupDiv className="group">
-        <StyledInput
-            name={ name }
-            id={ id }
-            onChange={ handleOnChange }
-            required
-        />
-        <Bar
-            className="bar"
-            color={ color }
-        />
+            <StyledInput
+                name={ name }
+                id={ id }
+                onChange={ handleOnChange }
+                required
+            />
+            <Bar
+                className="bar"
+                color={ color }
+            />
             { Label }
         </GroupDiv>
     );
 };
 
-export default InputField;
+export default Input;

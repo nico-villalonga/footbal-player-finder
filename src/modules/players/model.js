@@ -1,11 +1,30 @@
-import { filter, toLower } from 'ramda';
+import * as R from 'ramda';
 import moment from 'moment';
 
-export const filterByName = name => players =>
-    filter(player => name ? toLower(player.name).includes(toLower(name)) : true, players);
+// It has not test since is a moment.js functionality
+// And the test would have to be updated every year
+const dateToAge = dateOfBirth => moment().diff(dateOfBirth, 'years');
 
-export const filterByPosition = position => players =>
-    filter(player => position ? player.position === position : true, players);
+export const filtersFn = {
+    name: name => player => R.test(new RegExp(name, 'g'), R.toLower(player.name)),
+    position: position => player => player.position === position,
+    age: age => player => dateToAge(player.dateOfBirth) === Number(age),
+};
 
-export const filterByAge = age => players =>
-    filter(player => age ? moment().diff(player.dateOfBirth, 'years') === Number(age) : true, players);
+// Perform filter on players only if value from filter is not empty
+export const filterByProp = filter => players => {
+    const [ key, value ] = Object.entries(filter)[0];
+    return R.isEmpty(value)
+        ? players
+        : R.filter(filtersFn[key](value), players);
+}
+
+export const filterPlayers = (filters, players) => {
+    const { name, position, age } = filters;
+
+    return R.pipe(
+        filterByProp({ name }),
+        filterByProp({ position }),
+        filterByProp({ age }),
+    )(players);
+};

@@ -3,7 +3,9 @@ import { connect } from 'react-redux';
 import styled from 'styled-components';
 
 import filters from '../index';
-import InputField from '../../../components/InputField';
+import Input from '../../../components/Input';
+import Select from '../../../components/Select';
+import SelectItem from '../../../components/SelectItem';
 import Button from '../../../components/Button';
 
 const Container = styled.div`
@@ -22,6 +24,12 @@ class FilterSearch extends PureComponent {
             playerPosition: '',
             playerAge: '',
         };
+
+        this.positions = [
+            '', 'Attacking Midfield', 'Central Midfield', 'Centre-Back',
+            'Centre-Forward', 'Defensive Midfield', 'Keeper',
+            'Left Midfield', 'Left Wing', 'Left-Back', 'Right-Back',
+        ];
 
         this.handleSearch = this.handleSearch.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
@@ -47,18 +55,29 @@ class FilterSearch extends PureComponent {
     render() {
         return (
             <Container>
-                <InputField
+                <Input
                     name="playerName"
                     placeHolder="Player name"
                     pattern="alphanumeric"
                     onChange={ this.handleInputChange }
                 />
-                <InputField
+
+                <Select
                     name="playerPosition"
-                    placeHolder="Position"
+                    placeHolder="Player position"
                     onChange={ this.handleInputChange }
-                />
-                <InputField
+                >
+                    {
+                        this.positions.map((position, idx) => (
+                            <SelectItem
+                                key={ idx }
+                                label={ position }
+                            />
+                        ))
+                    }
+                </Select>
+
+                <Input
                     name="playerAge"
                     placeHolder="Age"
                     pattern="numeric"

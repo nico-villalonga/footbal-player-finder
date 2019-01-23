@@ -4,6 +4,7 @@ export const fetch = () => ({
     type: t.FETCH,
 });
 
+// players shape: [{...}, {...}, ];
 export const fetchSuccess = players => ({
     type: t.FETCH_SUCCESS,
     payload: { players },
