@@ -12,5 +12,3 @@ export const getFiltered = createSelector(
     getAll,
     (filters, all) => filterPlayers(filters, all)
 );
-
-// export const getFiltered = state => filterPlayers(filtersSelectors.getAll(state), getAll(state));

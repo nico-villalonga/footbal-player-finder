@@ -11,7 +11,8 @@ import PlayersList from '../components/PlayersList';
 const FilterSearch = filtersContainers.FilterSearch;
 const ListWithSpinner = WithSpinner('players')(PlayersList);
 
-class PlayersView extends Component {
+// Named export ONLY for testing.
+export class PlayersView extends Component {
 	componentDidMount() {
         this.props.fetchPlayers();
 	}
@@ -41,7 +42,7 @@ const mapStateToProps = state => ({
     players: playersSelectors.getFiltered(state),
 });
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
   	fetchPlayers: () => dispatch(players.actions.fetch()),
 });
 

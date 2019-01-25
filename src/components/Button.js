@@ -47,6 +47,7 @@ const ButtonWrapper = styled.button.attrs(props => ({
 
 const Button = props => {
     const {
+        id,
         variant,
         label,
         onClick,
@@ -54,6 +55,7 @@ const Button = props => {
 
     return (
         <ButtonWrapper
+            id={ id }
             classes={ variant }
             onClick={ onClick }
         >

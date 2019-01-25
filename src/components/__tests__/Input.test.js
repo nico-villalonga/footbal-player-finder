@@ -5,7 +5,6 @@ import Input, { isValidInput, patterns } from '../Input';
 require('../../setup');
 
 describe('test Input with props', () => {
-
     describe('test patterns object', () => {
         it('should be an object of three regex', () => {
             expect(patterns['alphanumeric'] instanceof RegExp).toEqual(true);
@@ -16,6 +15,12 @@ describe('test Input with props', () => {
     });
 
     describe('test isValidInput with different patterns', () => {
+        it('should be true when empty value', () => {
+            expect(isValidInput('alphanumeric', '')).toBeTruthy();
+            expect(isValidInput('numeric', '')).toBeTruthy();
+            expect(isValidInput('text', '')).toBeTruthy();
+        });
+
         it('should validate input on alphanumeric', () => {
             expect(isValidInput('alphanumeric', 'only text')).toEqual(true);
             expect(isValidInput('alphanumeric', '123456')).toEqual(true);
@@ -67,6 +72,5 @@ describe('test Input with props', () => {
 
         // TODO: spy on change method
         // wrapper.simulate('change')
-        // expect(wrapper.childAt(0).props().onChange).toHaveBeenCalled();
     });
 });

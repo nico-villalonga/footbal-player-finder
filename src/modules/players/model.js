@@ -3,7 +3,7 @@ import moment from 'moment';
 
 // It has not test since is a moment.js functionality
 // And the test would have to be updated every year
-const dateToAge = dateOfBirth => moment().diff(dateOfBirth, 'years');
+export const dateToAge = dateOfBirth => moment().diff(dateOfBirth, 'years');
 
 export const filtersFn = {
     name: name => player => R.test(new RegExp(name, 'g'), R.toLower(player.name)),

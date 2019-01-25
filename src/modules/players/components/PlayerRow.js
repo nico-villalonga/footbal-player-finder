@@ -2,9 +2,7 @@ import React from 'react';
 import moment from 'moment';
 import styled from 'styled-components'
 
-export const RowContainer = styled.div.attrs(props => ({
-    className: props.classes,
-}))`
+export const RowContainer = styled.div`
     display: flex;
     justify-content: space-between;
     height: 90px;

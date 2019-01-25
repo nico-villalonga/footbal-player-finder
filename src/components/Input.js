@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
 const GroupDiv = styled.div`
@@ -14,6 +15,7 @@ const StyledInput = styled.input`
     border: none;
     border-bottom: 1px solid #e3e3e3;
     color: #646464;
+    cursor: pointer;
 
     &:focus {
         outline: none;
@@ -74,7 +76,7 @@ export const patterns = {
     text: /^[a-z A-Z]+$/,
 };
 
-export const isValidInput = (pattern, value) => patterns[pattern].test(value);
+export const isValidInput = (pattern, value) => !value || patterns[pattern].test(value);
 
 const Input = props =>  {
     const {
@@ -84,15 +86,13 @@ const Input = props =>  {
         color = '#6dafd9',
         onChange,
         pattern = 'alphanumeric',
+        value,
     } = props;
 
     const handleOnChange = event => {
         const value = event.target.value;
         const validInput = isValidInput(pattern, value);
-
-        if (typeof onChange === 'function' && validInput) {
-           onChange(name, value, validInput);
-        }
+        onChange(name, value, validInput);
     };
 
     const Label = placeHolder && (
@@ -104,9 +104,10 @@ const Input = props =>  {
     return (
         <GroupDiv className="group">
             <StyledInput
-                name={ name }
                 id={ id }
+                name={ name }
                 onChange={ handleOnChange }
+                value={ value }
                 required
             />
             <Bar
@@ -118,4 +119,10 @@ const Input = props =>  {
     );
 };
 
+// TODO: this should be a reutilized style component
+// (perhaps hoc? )together with Select.
 export default Input;
+
+Input.propTypes = {
+    onChange: PropTypes.func,
+}

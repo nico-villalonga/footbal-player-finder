@@ -1,114 +1,175 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styled from 'styled-components';
 
-const GroupDiv = styled.div`
+const Container = styled.div`
     position: relative;
-    margin-top: 45px;
-`;
-
-const StyledSelect = styled.select`
-    font-size: 14px;
-    padding: 8px 0;
-    display: block;
+    display: flex;
     width: 220px;
-    border: none;
-    border-bottom: 1px solid #e3e3e3;
-    color: #646464;
-    background-color: #ffffff;
+    align-self: center;
+    margin-top: 40px;
+
+    &.option-selected {
+        margin-top: 14px;
+    }
 
     &:focus {
+        border-bottom: 2px solid #6dafd9;
         outline: none;
     }
+`;
 
-    &:focus ~ label, &:valid ~ label {
-        top: -20px;
-        font-size: 12px;
-        color: #d1d1d1;
-    }
+const Input = styled.div`
+    border: none;
+    border-bottom: 1px solid #e3e3e3;
+    width: 100%;
+    padding-bottom: 2px;
+    cursor: pointer;
 
-    &:focus ~ .bar:before, &:focus ~ .bar:after {
-        width: 50%;
+    &.option-selected {
+        padding-bottom: 4px;
     }
 `;
 
-const Bar = styled.span.attrs(props => ({
-    color: props.color,
-}))`
-    position: relative;
-    display: block;
-    width: 220px;
+const Options = styled.div`
+    padding: 12px 0;
+    position: absolute;
+    background-color: #d1d1d1;
+    width: 100%;
+    top: 24px;
+    display: none;
 
-    &:before, &:after {
-        content: '';
-        height: 2px;
-        width: 0;
-        bottom: 1px;
-        position: absolute;
-        background: ${ props => props.color };
-        transition: 0.2s ease all;
+    &.option-selected {
+        top: 50px;
     }
 
-    &:before {
-      left: 50%;
-    }
-
-    &:after {
-      right: 50%;
+    &.visible {
+        display: block;
     }
 `;
 
-const StyledLabel = styled.label.attrs(props => ({
-    className: props.classes,
-}))`
+const Option = styled.div`
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    height: 34px;
+    padding-left: 10px;
+
+    &.selected,
+    &:hover {
+        background: #e3e3e3;
+    }
+
+    &.option-selected {
+        background: none;
+        color: #646464;
+    }
+`;
+
+const OptionLabel = styled.label`
+    color: #646464;
+    font-size: 14px;
+    font-weight: 400;
+
+    &:hover {
+        cursor: pointer;
+    }
+`;
+
+const Label = styled.p`
     color: #d1d1d1;
     font-size: 18px;
-    font-weight: normal;
-    position: absolute;
+    font-weight: 400;
     pointer-events: none;
-    top: 10px;
-    transition: 0.2s ease all;
+    margin: 0;
+    transition: 0.3s ease all;
+
+    &.option-selected {
+        font-size: 12px;
+    }
 `;
 
-const Select = props =>  {
+export const optionSelected = selected => selected ? ' option-selected' : '';
+
+export const Select = props => {
     const {
         id,
+        autoHide,
+        items,
         name,
+        onSelect,
+        onToggle,
+        opened,
         placeHolder,
-        color = '#6dafd9',
-        onChange,
+        selected,
     } = props;
 
-    const handleOnChange = event => {
-        const value = event.target.value;
-        if (typeof onChange === 'function') {
-           onChange(name, value, true);
+    const handleOnSelect = item => () => {
+        onSelect(name, item, true);
+
+        if (autoHide) {
+            onToggle();
         }
     };
 
-    const Label = placeHolder && (
-        <StyledLabel>
-            { placeHolder }
-        </StyledLabel>
+    const handleToggle = () => {
+        onToggle();
+    };
+
+    const PlaceHolderLabel = (
+        placeHolder
+        && (
+            <Label className={ `label-placeholder${ optionSelected(selected) }` }>
+                { placeHolder }
+            </Label>
+        )
     );
 
     return (
-        <GroupDiv className="custom-select">
-            <StyledSelect
+        <Container className={ `container${ optionSelected(selected) }` }>
+            <Input
                 id={ id }
-                name={ name }
-                className="select"
-                onChange={ handleOnChange }
-                required
+                className={ `select${ optionSelected(selected) }` }
+                onClick={ handleToggle }
             >
-                { props.children }
-            </StyledSelect>
-            <Bar
-                className="bar"
-                color={ color }
-            />
-            { Label }
-        </GroupDiv>
+                { PlaceHolderLabel }
+
+                {
+                    selected
+                    && (
+                        <Option className="option-selected">
+                            { selected }
+                        </Option>
+                    )
+                }
+            </Input>
+
+            {
+                <Options
+                    className={`options-list${ optionSelected(selected) } ${ opened ? 'visible' : '' }`}
+                >
+                {
+                    items.map((item, idx) => (
+                        <Option
+                            key={ idx }
+                            className="option"
+                            onClick={ handleOnSelect(item) }
+                        >
+                            <OptionLabel>
+                                { item }
+                            </OptionLabel>
+                        </Option>
+                    ))
+                }
+                </Options>
+            }
+        </Container>
     );
 };
 
 export default Select;
+
+Select.protoTypes = {
+    onSelect: PropTypes.func,
+    onToggle: PropTypes.func,
+}

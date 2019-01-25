@@ -11,7 +11,7 @@ const Container = styled.div`
 
 const PlayerListHeader = () => (
     <Container>
-        <RowContainer classes="header">
+        <RowContainer className="header">
             {
                 headerTitles.map((title, index) => (
                     <RowBlock key={ index }>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { shallow, render, mount } from 'enzyme';
-import WithSpinner from '../WithSpinner';
+import WithSpinner, { isEmpty } from '../WithSpinner';
 
 require('../../setup');
 
@@ -61,5 +61,22 @@ describe('test WithSpinner hoc', () => {
 
         expect(wrapper.html()).not.toBe(null);
         expect(wrapper.children().html()).toEqual('<div>Has Loaded</div>');
+    });
+
+    describe('test isEmpty functionality', () => {
+        it('should pass empty value and return true', () => {
+            expect(isEmpty(null)).toBeTruthy();
+            expect(isEmpty(undefined)).toBeTruthy();
+            expect(isEmpty([])).toBeTruthy();
+            expect(isEmpty({})).toBeTruthy();
+        });
+
+        it('should pass some value and return false', () => {
+            const someValue = 1;
+
+            expect(isEmpty(someValue)).toBeFalsy();
+            expect(isEmpty([someValue])).toBeFalsy();
+            expect(isEmpty({someValue})).toBeFalsy();
+        });
     });
 });

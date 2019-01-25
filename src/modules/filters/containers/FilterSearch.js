@@ -5,7 +5,6 @@ import styled from 'styled-components';
 import filters from '../index';
 import Input from '../../../components/Input';
 import Select from '../../../components/Select';
-import SelectItem from '../../../components/SelectItem';
 import Button from '../../../components/Button';
 
 const Container = styled.div`
@@ -15,14 +14,16 @@ const Container = styled.div`
     padding: 0 50px;
 `;
 
-class FilterSearch extends PureComponent {
+// Named export ONLY for testing.
+export class FilterSearch extends PureComponent {
     constructor(props) {
         super(props);
 
         this.state = {
-            playerName: '',
-            playerPosition: '',
-            playerAge: '',
+            name: '',
+            position: '',
+            age: '',
+            showSelect: false,
         };
 
         this.positions = [
@@ -32,59 +33,61 @@ class FilterSearch extends PureComponent {
         ];
 
         this.handleSearch = this.handleSearch.bind(this);
-        this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleFilterChange = this.handleFilterChange.bind(this);
+        this.toggleSelect = this.toggleSelect.bind(this);
     }
 
     handleSearch() {
-        const getNodeValue = name => document.getElementsByName(name)[0].value.trim();
-        const filters = {
-            name: getNodeValue('playerName'),
-            position: getNodeValue('playerPosition'),
-            age:getNodeValue('playerAge'),
-        };
-
-        this.props.addFilters(filters);
+        const { name, position, age } = this.state;
+        this.props.addFilters({ name, position, age});
     }
 
-    handleInputChange(name, value, validInput) {
-        if (this.state[name] !== value && validInput) {
-            this.setState({ [name]: value });
+    handleFilterChange(name, value, validInput) {
+        if (validInput) {
+            this.setState({ [name]: value.trim() });
         }
+    }
+
+    toggleSelect() {
+        this.setState({ showSelect: !this.state.showSelect });
     }
 
     render() {
         return (
             <Container>
                 <Input
-                    name="playerName"
+                    id="player-name"
+                    name="name"
                     placeHolder="Player name"
-                    pattern="alphanumeric"
-                    onChange={ this.handleInputChange }
+                    pattern="text"
+                    onChange={ this.handleFilterChange }
+                    value={ this.state.name }
                 />
 
                 <Select
-                    name="playerPosition"
+                    id="player-position"
+                    items={ this.positions }
+                    name="position"
                     placeHolder="Player position"
-                    onChange={ this.handleInputChange }
-                >
-                    {
-                        this.positions.map((position, idx) => (
-                            <SelectItem
-                                key={ idx }
-                                label={ position }
-                            />
-                        ))
-                    }
-                </Select>
+                    opened={ this.state.showSelect }
+                    onSelect={ this.handleFilterChange }
+                    onToggle={ this.toggleSelect }
+                    autoHide={ true }
+                    selected={ this.state.position }
+                />
+
 
                 <Input
-                    name="playerAge"
+                    id="player-age"
+                    name="age"
                     placeHolder="Age"
                     pattern="numeric"
-                    onChange={ this.handleInputChange }
+                    onChange={ this.handleFilterChange }
+                    value={ this.state.age }
                 />
 
                 <Button
+                    id="search-button"
                     variant="outline"
                     label="Search"
                     onClick={ this.handleSearch }
@@ -94,7 +97,7 @@ class FilterSearch extends PureComponent {
     }
 }
 
-const mapDispatchToProps = dispatch => ({
+export const mapDispatchToProps = dispatch => ({
     addFilters: filtersObj => dispatch(filters.actions.add(filtersObj)),
 });
 

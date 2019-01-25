@@ -4,13 +4,11 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import { playersContainers } from './modules/players';
 import './App.css';
 
-class App extends Component {
+export class App extends Component {
     render() {
-        const { PlayersView } = playersContainers;
-
 		return (
 			<BrowserRouter>
-                <Route exact path='/' component={ PlayersView } />
+                <Route exact path='/' component={ playersContainers.PlayersView } />
 			</BrowserRouter>
 		);
 	}
